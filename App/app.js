@@ -1,10 +1,3 @@
-var initialPositions = [
-    [0, 0, 0, 0, 0], 
-    [0, 0, 1, 0, 0], 
-    [0, 1, 1, 1, 0], 
-    [0, 0, 1, 0, 0], 
-    [0, 0, 0, 0, 0], 
-]
 
 const getValidIndex = (i, j, m, n) => {
     /*
@@ -49,25 +42,28 @@ const checkNeighbours = (i, j, combinations, gameBoard) => {
 
 const nextGeneration = (i, j, status, gameBoard) => {
     let alive = status[0]; 
-    let death = status[1]; 
+    let death = status[1];
+    var newValue;  
     if(gameBoard[i][j] == 0 && alive == 3){
-        gameBoard[i][j] = 1; 
-    } else if(gameBoard[i][j] == 0 && (alive == 3 || alive == 2)){
-        gameBoard[i][j] = 1;
+        newValue = 1; 
+    } else if(gameBoard[i][j] == 1 && (alive == 3 || alive == 2)){
+        newValue = 1;
     } else{
-        gameBoard[i][j] = 0;
+        newValue = 0;
     }
 
-    return gameBoard
+    return newValue
 
 }
+
+
 
 
 const gameOfLife = (initial) => {
     /*
         Main game controller. 
-    */
-    var nextGen = [...initial]
+    */    
+    var nextGen = initial.map((arr) => arr.slice())
     const gameHeight = initial.length; 
     const gameWidth = initial[0].length; 
     for(let i = 0; i < gameWidth; i++){
@@ -76,13 +72,19 @@ const gameOfLife = (initial) => {
             validValues = getValidIndex(i, j, gameHeight, gameWidth); 
             combinations = generateCombinations(validValues); 
             neighbourStatus = checkNeighbours(i, j, combinations, initial); 
-            console.log(initial);
-            nextGen = nextGeneration(i, j, neighbourStatus, initial)
+            nextGen[i][j] = nextGeneration(i, j, neighbourStatus, initial);
         }
     }
 
+    console.log(initial); 
+    console.log(nextGen);
 
-    
 }
 
-gameOfLife(initialPositions)
+gameOfLife([
+    [0, 0, 0, 0, 0], 
+    [0, 1, 1, 1, 0], 
+    [0, 1, 0, 1, 0], 
+    [0, 1, 1, 1, 0], 
+    [0, 0, 0, 0, 0], 
+])
